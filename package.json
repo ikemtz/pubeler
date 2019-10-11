@@ -1,6 +1,6 @@
 {
   "name": "pubeler",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "A console application that can call Rest APIs with data from flat files.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -14,7 +14,7 @@
     "start": "tsc && node ./dist/index.js",
     "debug": "tsc && node --inspect-brk=9222 ./dist/index.js",
     "build": "tsc",
-    "test": "npm run build && npm i -g . && pubeler"
+    "test": "tsc && npm i -g . && pubeler"
   },
   "repository": {
     "type": "git",
@@ -22,7 +22,8 @@
   },
   "keywords": [
     "Excel",
-    "Rest"
+    "Rest",
+    "Auth0"
   ],
   "author": "@IkeMtz",
   "license": "MIT",

@@ -9,23 +9,32 @@ export class Pubeler {
     private readonly url: string,
   ) {}
 
+  private successRecords = 0;
+  private failedRecords = 0;
+
   public async pubelRecords() {
-    const primaryKeyName = Object.keys(this.dataSet)[0];
+    const primaryKeyName = Object.keys(this.dataSet[0])[0];
     for (let index = 0; index < this.dataSet.length; index++) {
       await this.pubelRecord(this.dataSet[index], primaryKeyName);
     }
+    console.log(`Successful posts ${chalk.green(this.successRecords.toString())}`);
+    console.log(`Failed posts ${chalk.red(this.failedRecords.toString())}`);
+    console.log('Pubeler out 🎤 💧 ✌');
   }
 
   private async pubelRecord(record: any, primaryKeyName: string): Promise<object> {
+    const primaryKeyValue = record[primaryKeyName];
     try {
       const response = await axios.post(this.url, record, {
         headers: { Authorization: `Bearer ${this.tokenResponse.access_token}` },
       });
-      console.log(`Success Posting: ${response.data[primaryKeyName]}`);
+      console.log(`Success Posting: ${primaryKeyValue}`);
+      this.successRecords++;
       return response.data;
     } catch (err) {
-      console.log(chalk.red(`Error Posting: ${record[primaryKeyName]}`));
+      console.log(chalk.red(`Error Posting: ${primaryKeyValue}`));
       console.log(chalk.red(`  Error message: ${err.message}`));
+      this.failedRecords++;
       return err;
     }
   }
