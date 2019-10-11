@@ -4,6 +4,18 @@ pronounced pyüb-lər
 
 A utility to automate the publishing of data contained in flat files to resful APIs. At this time this is setup to use device OAuth workflow.
 
+## installation
+
+```
+npm install --global pubeler
+```
+
+or
+
+```
+npm i -g pubeler
+```
+
 ## running it
 
 pubeler -C <config-file --required> -D <data-file --required>
