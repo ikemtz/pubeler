@@ -1,0 +1,45 @@
+{
+  "name": "pubeler",
+  "version": "1.0.1",
+  "description": "A console application that can call Rest APIs with data from flat files.",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "pubeler": "./dist/index.js"
+  },
+  "files": [
+    "/dist"
+  ],
+  "scripts": {
+    "start": "tsc && node ./dist/index.js",
+    "debug": "tsc && node --inspect-brk=9222 ./dist/index.js",
+    "build": "tsc",
+    "test": "npm run build && npm i -g . && pubeler"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ikemtz/pubeler.git"
+  },
+  "keywords": [
+    "Excel",
+    "Rest"
+  ],
+  "author": "@IkeMtz",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ikemtz/pubeler/issues"
+  },
+  "homepage": "https://github.com/ikemtz/pubeler#readme",
+  "dependencies": {
+    "axios": "^0.19.0",
+    "chalk": "^2.4.2",
+    "commander": "^3.0.2",
+    "csv-parse": "^4.6.3",
+    "fs": "0.0.1-security",
+    "inquirer": "^7.0.0",
+    "typescript": "^3.6.3"
+  },
+  "devDependencies": {
+    "@types/node": "^12.7.12"
+  }
+}
