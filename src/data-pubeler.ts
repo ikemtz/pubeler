@@ -35,7 +35,7 @@ export class Pubeler {
       console.log(chalk.red(`Error Posting: ${primaryKeyValue}`));
       let msg: string = err.message;
       if (err.response && err.response.data) {
-        msg = err.response.data;
+        msg = JSON.stringify(err.response.data);
       }
       console.log(chalk.red(`  Error message: ${msg}`));
       this.failedRecords++;

@@ -35,12 +35,15 @@ export class ParserLogic {
       auto_parse_date: true,
       bom: true,
       cast: x => {
+        x = (x || '').trim();
         if (x === 'true') {
           return true;
         } else if (x === 'false') {
           return false;
+        } else if (x === 'NULL' || x.length === 0) {
+          return null;
         }
-        return (x || '').trim();
+        return x;
       },
     });
 
