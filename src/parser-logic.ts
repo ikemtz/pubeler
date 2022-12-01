@@ -1,7 +1,7 @@
-import * as parse from 'csv-parse';
+import { parse } from 'csv-parse';
 
 export class ParserLogic {
-  constructor(private readonly content: string, private readonly delimeter: string) {}
+  constructor(private readonly content: string, private readonly delimeter: string) { }
 
   public getData(): Array<object> {
     const parserOutput = this.getContentArrays();
@@ -48,7 +48,7 @@ export class ParserLogic {
     });
 
     // Use the readable stream api
-    parser.on('readable', function() {
+    parser.on('readable', function () {
       let record;
       while ((record = parser.read())) {
         parserOutput.push(record);

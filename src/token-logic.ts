@@ -3,17 +3,17 @@ import { DeviceCodeResponse } from './device-code-response';
 import { TokenResponse } from './token-response';
 import { pollWrapper } from './poll-wrapper';
 import { Config } from './config';
-import chalk from 'chalk';
+const chalk = require('chalk');
 const qs = require('querystring');
 
 export class TokenLogic {
-  constructor(private readonly config: Config) {}
+  constructor(private readonly config: Config) {
+  }
   public async getToken(): Promise<TokenResponse> {
     const deviceCode = await this.requestUserCode();
     const expirationTime = new Date(new Date().getTime() + deviceCode.expires_in * 1000);
     console.log(
-      `Your user code is ${chalk.green(deviceCode.user_code)} and will expire at ${chalk.red(
-        expirationTime.toLocaleTimeString(),
+      `Your user code is ${chalk.green(deviceCode.user_code)} and will expire at ${chalk.red(expirationTime.toLocaleTimeString(),
       )}`,
     );
     console.log(`Navigate to: ${chalk.blueBright(deviceCode.verification_uri_complete)}`);
@@ -66,7 +66,7 @@ export class TokenLogic {
         console.log('Access Granted');
       }
       return deviceCode;
-    } catch (err) {
+    } catch (err: any) {
       return err.response.data;
     }
   }

@@ -23,8 +23,11 @@
   },
   "keywords": [
     "Excel",
+    "CSV",
     "Rest",
-    "Auth0"
+    "Auth0",
+    "OAuth2",
+    "OIDC"
   ],
   "author": "@IkeMtz",
   "license": "MIT",
@@ -33,15 +36,15 @@
   },
   "homepage": "https://github.com/ikemtz/pubeler#readme",
   "dependencies": {
-    "axios": "^0.21.1",
-    "chalk": "^2.4.2",
-    "commander": "^3.0.2",
-    "csv-parse": "^4.6.3",
+    "axios": "^1.2.0",
+    "chalk": "^4.1.2",
+    "commander": "^9.4.1",
+    "csv-parse": "^5.3.3",
     "fs": "0.0.1-security",
-    "inquirer": "^7.0.0",
-    "typescript": "^3.6.3"
+    "inquirer": "^9.1.4"
   },
   "devDependencies": {
-    "@types/node": "^12.7.12"
+    "@types/node": "^18.11.9",
+    "typescript": "^4.9.3"
   }
 }

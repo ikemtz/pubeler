@@ -1,21 +1,21 @@
 import { TokenResponse } from './token-response';
 import axios from 'axios';
-import chalk from 'chalk';
+const chalk = require('chalk');
 
 export class Pubeler {
   constructor(
     private readonly dataSet: Array<object>,
     private readonly tokenResponse: TokenResponse,
-    private readonly url: string,
-  ) {}
+    private readonly url: string
+  ) { }
 
   private successRecords = 0;
   private failedRecords = 0;
 
   public async pubelRecords() {
     const primaryKeyName = Object.keys(this.dataSet[0])[0];
-    for (let index = 0; index < this.dataSet.length; index++) {
-      await this.pubelRecord(this.dataSet[index], primaryKeyName);
+    for (const element of this.dataSet) {
+      await this.pubelRecord(element, primaryKeyName);
     }
     console.log(`Successful posts ${chalk.green(this.successRecords.toString())}`);
     console.log(`Failed posts ${chalk.red(this.failedRecords.toString())}`);
@@ -31,7 +31,7 @@ export class Pubeler {
       console.log(`Success Posting: ${primaryKeyValue}`);
       this.successRecords++;
       return response.data;
-    } catch (err) {
+    } catch (err: any) {
       console.log(chalk.red(`Error Posting: ${primaryKeyValue}`));
       let msg: string = err.message;
       if (err.response && err.response.data) {

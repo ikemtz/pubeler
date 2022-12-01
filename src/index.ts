@@ -5,12 +5,12 @@ import { ParserLogic } from './parser-logic';
 import { TokenLogic } from './token-logic';
 import { Pubeler } from './data-pubeler';
 import { Config } from './config';
-import * as commander from 'commander';
+import { program } from 'commander';
 import { CommandLineArguments } from './command-line-arguments';
-import chalk from 'chalk';
+const chalk = require('chalk');
 
 console.clear();
-const commandLineArgs = (commander
+const commandLineArgs = (program
   .version('0.1.0')
   .description(
     `A utility to automate the publishing of data contained in flat files to resful APIs.  For more info, check out the readme: ${chalk.blueBright(
