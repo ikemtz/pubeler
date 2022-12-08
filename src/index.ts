@@ -10,16 +10,18 @@ import { CommandLineArguments } from './command-line-arguments';
 const chalk = require('chalk');
 
 console.clear();
-const commandLineArgs = (program
+program
   .version('0.1.0')
   .description(
     `A utility to automate the publishing of data contained in flat files to resful APIs.  For more info, check out the readme: ${chalk.blueBright(
       'https://github.com/ikemtz/pubeler',
     )} `,
   )
-  .option('-C, --configFile <configFile>', 'location of configuration file <Required>')
-  .option('-D, --dataFile <dataFile>', 'location of data file <Required>')
-  .parse(process.argv) as unknown) as CommandLineArguments;
+  .requiredOption('-C, --configFile <configFile>', 'location of configuration file <Required>')
+  .requiredOption('-D, --dataFile <dataFile>', 'location of data file <Required>');
+program.parse(process.argv);
+
+const commandLineArgs = program.opts() as CommandLineArguments;
 
 if ((commandLineArgs.configFile || '').trim().length == 0 || (commandLineArgs.dataFile || '').trim().length == 0) {
   commandLineArgs.help();
@@ -31,10 +33,10 @@ const config: Config = JSON.parse(configJson);
 const content = fs.readFileSync(commandLineArgs.dataFile, { encoding: 'utf8' });
 const parserLogic = new ParserLogic(content, config.textDelimeter);
 
-const records = parserLogic.getData();
+const records = parserLogic.getDataAsync();
 
-new TokenLogic(config).getToken().then(token => {
+new TokenLogic(config).getToken().then(async (token) => {
   console.log('Starting the posting process');
-  const pubeler = new Pubeler(records, token, config.postDestinationUrl);
+  const pubeler = new Pubeler(await records, token, config.postDestinationUrl, config);
   pubeler.pubelRecords();
 });

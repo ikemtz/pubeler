@@ -1,13 +1,16 @@
 import { TokenResponse } from './token-response';
 import axios from 'axios';
+import * as https from 'https';
+import { Config } from './config';
 const chalk = require('chalk');
 
 export class Pubeler {
   constructor(
     private readonly dataSet: Array<object>,
     private readonly tokenResponse: TokenResponse,
-    private readonly url: string
-  ) { }
+    private readonly url: string,
+    private readonly config: Config,
+  ) {}
 
   private successRecords = 0;
   private failedRecords = 0;
@@ -27,6 +30,7 @@ export class Pubeler {
     try {
       const response = await axios.post(this.url, record, {
         headers: { Authorization: `Bearer ${this.tokenResponse.access_token}` },
+        httpsAgent: new https.Agent({ rejectUnauthorized: !(this.config.skip_ssl_validation || false) }),
       });
       console.log(`Success Posting: ${primaryKeyValue}`);
       this.successRecords++;
