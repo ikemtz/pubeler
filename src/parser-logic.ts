@@ -1,10 +1,10 @@
 import { parse } from 'csv-parse';
 
 export class ParserLogic {
-  constructor(private readonly content: string, private readonly delimeter: string) { }
+  constructor(private readonly content: string, private readonly delimeter: string) {}
 
-  public getData(): Array<object> {
-    const parserOutput = this.getContentArrays();
+  public async getDataAsync(): Promise<Array<object>> {
+    const parserOutput = await this.getContentArraysAsync();
     const headerRow = parserOutput[0];
     const parsedData = Array<object>();
 
@@ -26,36 +26,41 @@ export class ParserLogic {
     return record;
   }
 
-  private getContentArrays(): Array<Array<any>> {
+  private getContentArraysAsync(): Promise<Array<Array<any>>> {
     const parserOutput = Array<Array<any>>();
-    // Create the parser
-    const parser = parse({
-      delimiter: this.delimeter,
-      auto_parse: true,
-      auto_parse_date: true,
-      bom: true,
-      cast: x => {
-        x = (x || '').trim();
-        if (x === 'true') {
-          return true;
-        } else if (x === 'false') {
-          return false;
-        } else if (x === 'NULL' || x.length === 0) {
-          return null;
-        }
-        return x;
-      },
-    });
+    return new Promise((resolve, reject) => {
+      // Create the parser
+      const parser = parse({
+        delimiter: this.delimeter,
+        auto_parse: true,
+        auto_parse_date: true,
+        bom: true,
+        cast: (x) => {
+          x = (x || '').trim();
+          if (x.toLowerCase() === 'true') {
+            return true;
+          } else if (x.toLowerCase() === 'false') {
+            return false;
+          } else if (x === 'NULL' || x.length === 0) {
+            return null;
+          }
+          return x;
+        },
+      });
 
-    // Use the readable stream api
-    parser.on('readable', function () {
-      let record;
-      while ((record = parser.read())) {
-        parserOutput.push(record);
-      }
+      // Use the readable stream api
+      parser.on('readable', function () {
+        let record;
+        while ((record = parser.read()) !== null) {
+          parserOutput.push(record);
+        }
+      });
+      parser.on('error', function (err) {
+        console.error(err.message);
+        reject(err.message);
+      });
+      parser.write(this.content);
+      parser.end(() => resolve(parserOutput));
     });
-    parser.write(this.content);
-    parser.end();
-    return parserOutput;
   }
 }

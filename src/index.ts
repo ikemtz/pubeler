@@ -33,10 +33,10 @@ const config: Config = JSON.parse(configJson);
 const content = fs.readFileSync(commandLineArgs.dataFile, { encoding: 'utf8' });
 const parserLogic = new ParserLogic(content, config.textDelimeter);
 
-const records = parserLogic.getData();
+const records = parserLogic.getDataAsync();
 
-new TokenLogic(config).getToken().then((token) => {
+new TokenLogic(config).getToken().then(async (token) => {
   console.log('Starting the posting process');
-  const pubeler = new Pubeler(records, token, config.postDestinationUrl);
+  const pubeler = new Pubeler(await records, token, config.postDestinationUrl);
   pubeler.pubelRecords();
 });
