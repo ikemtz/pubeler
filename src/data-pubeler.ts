@@ -24,7 +24,7 @@ export class Pubeler {
     }
     if (this.failedRecords.length) {
       const urlSplits = this.config.postDestinationUrl.split('/');
-      const path = `./${urlSplits[urlSplits.length - 1]}.${format(new Date(), 'YYMMDDHHmmss')}.failures.txt`;
+      const path = `./${urlSplits[urlSplits.length - 1]}.${format(new Date(), 'yyMMddHHmmss')}.failures.txt`;
       fs.writeFileSync(path, this.failedRecords.join('\n'));
     }
     console.log(`Successful posts ${chalk.green(this.successRecords.toString())}`);
