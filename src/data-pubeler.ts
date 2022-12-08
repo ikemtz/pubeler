@@ -1,7 +1,9 @@
 import { TokenResponse } from './token-response';
 import axios from 'axios';
-import * as https from 'https';
+import { Agent } from 'https';
 import { Config } from './config';
+import { format } from 'date-fns';
+import * as fs from 'fs';
 const chalk = require('chalk');
 
 export class Pubeler {
@@ -13,7 +15,7 @@ export class Pubeler {
   ) {}
 
   private successRecords = 0;
-  private failedRecords = 0;
+  private failedRecords: string[] = [];
 
   public async pubelRecords() {
     const primaryKeyName = Object.keys(this.dataSet[0])[0];
@@ -21,7 +23,13 @@ export class Pubeler {
       await this.pubelRecord(element, primaryKeyName);
     }
     console.log(`Successful posts ${chalk.green(this.successRecords.toString())}`);
-    console.log(`Failed posts ${chalk.red(this.failedRecords.toString())}`);
+    console.log(`Failed posts ${chalk.red(this.failedRecords.length)}`);
+    if (this.failedRecords.length) {
+      const urlSplits = this.config.postDestinationUrl.split('/');
+      const path = `./${urlSplits[urlSplits.length - 1]}.${format(new Date(), 'yyMMddHHmmss')}.failures.txt`;
+      fs.writeFileSync(path, this.failedRecords.join('\n'));
+      console.error(`Failed post records were written to: ${path}`);
+    }
     console.log('Pubeler out 🎤 💧 ✌');
   }
 
@@ -30,20 +38,24 @@ export class Pubeler {
     try {
       const response = await axios.post(this.url, record, {
         headers: { Authorization: `Bearer ${this.tokenResponse.access_token}` },
-        httpsAgent: new https.Agent({ rejectUnauthorized: !(this.config.skip_ssl_validation || false) }),
+        httpsAgent: new Agent({ rejectUnauthorized: !(this.config.skip_ssl_validation || false) }),
       });
       console.log(`Success Posting: ${primaryKeyValue}`);
       this.successRecords++;
       return response.data;
     } catch (err: any) {
-      console.log(chalk.red(`Error Posting: ${primaryKeyValue}`));
+      console.error(chalk.red(`Error Posting: ${primaryKeyValue}`));
       let msg: string = err.message;
       if (err.response && err.response.data) {
         msg = JSON.stringify(err.response.data);
       }
-      console.log(chalk.red(`  Error message: ${msg}`));
-      this.failedRecords++;
+      console.error(chalk.red(`  Error message: ${msg}`));
+      this.failedRecords.push(this.stringifyRecord(record));
       return err;
     }
+  }
+
+  public stringifyRecord(record: any): string {
+    return Object.values(record).join(this.config.textDelimeter);
   }
 }
