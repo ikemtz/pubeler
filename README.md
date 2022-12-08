@@ -36,7 +36,9 @@ Here's a sample:
   "oauth_device_code_url": "https://{tenant-name}.auth0.com/oauth/token",
   "oauth_token_url": "https://{tenant-name}.auth0.com/oauth/token",
   "oauth_audience": "{your-audience}",
-  "oauth_scope": "openid"
+  "oauth_scope": "openid",
+  // This is an optional setting, only to be used when necessary
+  "skip_ssl_validation": false,
 }
 ```
 

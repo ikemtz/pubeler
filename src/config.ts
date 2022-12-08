@@ -6,4 +6,5 @@ export interface Config {
   oauth_audience: string;
   oauth_scope: string;
   oauth_token_url: string;
+  skip_ssl_validation?: boolean;
 }

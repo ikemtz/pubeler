@@ -37,6 +37,6 @@ const records = parserLogic.getDataAsync();
 
 new TokenLogic(config).getToken().then(async (token) => {
   console.log('Starting the posting process');
-  const pubeler = new Pubeler(await records, token, config.postDestinationUrl);
+  const pubeler = new Pubeler(await records, token, config.postDestinationUrl, config);
   pubeler.pubelRecords();
 });
