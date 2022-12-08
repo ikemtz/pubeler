@@ -42,4 +42,10 @@ Here's a sample:
 }
 ```
 
-#### Note: Your identity provider has to support the device workflow. I recommend using [Auth0](https://auth0.com/docs/flows/concepts/device-auth) as they support an easy implementation of this workflow.
+#### Note: Your identity provider has to support the device workflow. I recommend using [Auth0](https://auth0.com/docs/flows/concepts/device-auth) as they have an easy to use implementation of this workflow.
+
+## error handling
+
+If a post related error occurs, a new txt file will be created containing the records that caused an error response (HTTP 400-500 response codes.) This file will allow you to easily retry failed records in a subsequent run. The generated text file name will be named: `{url pathinfo}.{timestamp (yyMMddHHmmss)}.failures.txt`. An example of this would be: myrecords.json.221208011433.failures.txt.
+
+The server response which typically indicates why the post request failed will be logged to the console. Additionally, authentication/OAuth related errors will be logged to the console as well.

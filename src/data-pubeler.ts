@@ -22,13 +22,14 @@ export class Pubeler {
     for (const element of this.dataSet) {
       await this.pubelRecord(element, primaryKeyName);
     }
+    console.log(`Successful posts ${chalk.green(this.successRecords.toString())}`);
+    console.log(`Failed posts ${chalk.red(this.failedRecords.length)}`);
     if (this.failedRecords.length) {
       const urlSplits = this.config.postDestinationUrl.split('/');
       const path = `./${urlSplits[urlSplits.length - 1]}.${format(new Date(), 'yyMMddHHmmss')}.failures.txt`;
       fs.writeFileSync(path, this.failedRecords.join('\n'));
+      console.error(`Failed post records were written to: ${path}`);
     }
-    console.log(`Successful posts ${chalk.green(this.successRecords.toString())}`);
-    console.log(`Failed posts ${chalk.red(this.failedRecords.length)}`);
     console.log('Pubeler out 🎤 💧 ✌');
   }
 
