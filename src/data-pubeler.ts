@@ -1,7 +1,9 @@
 import { TokenResponse } from './token-response';
 import axios from 'axios';
-import * as https from 'https';
+import { Agent } from 'https';
 import { Config } from './config';
+import { format } from 'date-fns';
+import * as fs from 'fs';
 const chalk = require('chalk');
 
 export class Pubeler {
@@ -13,15 +15,20 @@ export class Pubeler {
   ) {}
 
   private successRecords = 0;
-  private failedRecords = 0;
+  private failedRecords: string[] = [];
 
   public async pubelRecords() {
     const primaryKeyName = Object.keys(this.dataSet[0])[0];
     for (const element of this.dataSet) {
       await this.pubelRecord(element, primaryKeyName);
     }
+    if (this.failedRecords.length) {
+      const urlSplits = this.config.postDestinationUrl.split('/');
+      const path = `./${urlSplits[urlSplits.length - 1]}.${format(new Date(), 'YYMMDDHHmmss')}.failures.txt`;
+      fs.writeFileSync(path, this.failedRecords.join('\n'));
+    }
     console.log(`Successful posts ${chalk.green(this.successRecords.toString())}`);
-    console.log(`Failed posts ${chalk.red(this.failedRecords.toString())}`);
+    console.log(`Failed posts ${chalk.red(this.failedRecords.length)}`);
     console.log('Pubeler out 🎤 💧 ✌');
   }
 
@@ -30,7 +37,7 @@ export class Pubeler {
     try {
       const response = await axios.post(this.url, record, {
         headers: { Authorization: `Bearer ${this.tokenResponse.access_token}` },
-        httpsAgent: new https.Agent({ rejectUnauthorized: !(this.config.skip_ssl_validation || false) }),
+        httpsAgent: new Agent({ rejectUnauthorized: !(this.config.skip_ssl_validation || false) }),
       });
       console.log(`Success Posting: ${primaryKeyValue}`);
       this.successRecords++;
@@ -42,8 +49,12 @@ export class Pubeler {
         msg = JSON.stringify(err.response.data);
       }
       console.log(chalk.red(`  Error message: ${msg}`));
-      this.failedRecords++;
+      this.failedRecords.push(this.stringifyRecord(record));
       return err;
     }
+  }
+
+  public stringifyRecord(record: any): string {
+    return Object.values(record).join(this.config.textDelimeter);
   }
 }
