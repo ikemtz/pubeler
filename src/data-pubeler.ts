@@ -30,7 +30,7 @@ export class Pubeler {
     try {
       const response = await axios.post(this.url, record, {
         headers: { Authorization: `Bearer ${this.tokenResponse.access_token}` },
-        httpsAgent: new https.Agent({ rejectUnauthorized: this.config.skip_ssl_validation || false }),
+        httpsAgent: new https.Agent({ rejectUnauthorized: !(this.config.skip_ssl_validation || false) }),
       });
       console.log(`Success Posting: ${primaryKeyValue}`);
       this.successRecords++;
