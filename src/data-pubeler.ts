@@ -43,12 +43,12 @@ export class Pubeler {
       this.successRecords++;
       return response.data;
     } catch (err: any) {
-      console.log(chalk.red(`Error Posting: ${primaryKeyValue}`));
+      console.error(chalk.red(`Error Posting: ${primaryKeyValue}`));
       let msg: string = err.message;
       if (err.response && err.response.data) {
         msg = JSON.stringify(err.response.data);
       }
-      console.log(chalk.red(`  Error message: ${msg}`));
+      console.error(chalk.red(`  Error message: ${msg}`));
       this.failedRecords.push(this.stringifyRecord(record));
       return err;
     }
