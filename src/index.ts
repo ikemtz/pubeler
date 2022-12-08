@@ -11,7 +11,7 @@ const chalk = require('chalk');
 
 console.clear();
 program
-  .version('0.1.0')
+  .version('1.0.10')
   .description(
     `A utility to automate the publishing of data contained in flat files to resful APIs.  For more info, check out the readme: ${chalk.blueBright(
       'https://github.com/ikemtz/pubeler',

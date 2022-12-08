@@ -18,26 +18,32 @@ npm i -g pubeler
 
 ## running it
 
-pubeler -C <config-file --required> -D <data-file --required>
+`pubeler --configFile <config-file --required> --dataFile <data-file --required>`
 
 #### Note: This application uses the device workflow, so you will need to complete the authentication process with your identity provider.
 
+## getting help
+
+`pubeler --help`
+
+If this doesn't provide what you need, feel free to submit a new issue ticket [here](https://github.com/ikemtz/pubeler/issues/new).
+
 ## config file
 
-This is a JSON file that will inform Pubeler on how to authenticate and communicate with your APIs.
+This is a JSON file that will inform Pubeler on how to authenticate with your identity provider and communicate with your APIs.
 
 Here's a sample:
 
 ```
 {
   "textDelimeter": "\t",
-  "postDestinationUrl": "https://my-post-url.com",
+  "postDestinationUrl": "https://my-post-url.com/api/myrecords.json",
   "oauth_client_id": "my-client-id",
   "oauth_device_code_url": "https://{tenant-name}.auth0.com/oauth/token",
   "oauth_token_url": "https://{tenant-name}.auth0.com/oauth/token",
   "oauth_audience": "{your-audience}",
   "oauth_scope": "openid",
-  // This is an optional setting, only to be used when necessary
+  // This is an optional setting, only to be used when absolutely necessary
   "skip_ssl_validation": false,
 }
 ```
