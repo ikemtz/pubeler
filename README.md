@@ -28,6 +28,12 @@ npm i -g pubeler
 
 If this doesn't provide what you need, feel free to submit a new issue ticket [here](https://github.com/ikemtz/pubeler/issues/new).
 
+## enabling OAuth debugging (--oauthDebug)
+
+`pubeler --configFile <config-file --required> --dataFile <data-file --required> --oauthDebug`
+
+This will write out the aquired jwt from the oauth provider to the console.
+
 ## config file
 
 This is a JSON file that will inform Pubeler on how to authenticate with your identity provider and communicate with your APIs.
