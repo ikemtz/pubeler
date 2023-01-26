@@ -11,14 +11,15 @@ const chalk = require('chalk');
 
 console.clear();
 program
-  .version('0.1.0')
+  .version('1.0.10')
   .description(
     `A utility to automate the publishing of data contained in flat files to resful APIs.  For more info, check out the readme: ${chalk.blueBright(
       'https://github.com/ikemtz/pubeler',
     )} `,
   )
   .requiredOption('-C, --configFile <configFile>', 'location of configuration file <Required>')
-  .requiredOption('-D, --dataFile <dataFile>', 'location of data file <Required>');
+  .requiredOption('-D, --dataFile <dataFile>', 'location of data file <Required>')
+  .option('--oauthDebug', 'will output the jwt token acquired from oauth provider');
 program.parse(process.argv);
 
 const commandLineArgs = program.opts() as CommandLineArguments;
@@ -36,6 +37,10 @@ const parserLogic = new ParserLogic(content, config.textDelimeter);
 const records = parserLogic.getDataAsync();
 
 new TokenLogic(config).getToken().then(async (token) => {
+  if (commandLineArgs.oauthDebug) {
+    console.warn('OAuth Debug was specified.');
+    console.warn(`Here is your token: ${token}`);
+  }
   console.log('Starting the posting process');
   const pubeler = new Pubeler(await records, token, config.postDestinationUrl, config);
   pubeler.pubelRecords();
