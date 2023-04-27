@@ -42,9 +42,7 @@
     "csv-parse": "^5.3.3",
     "date-fns": "^2.29.3",
     "fs": "0.0.1-security",
-    "inquirer": "^9.1.4",
-    "isomorphic-fetch": "^3.0.0",
-    "node-fetch": "^3.3.1"
+    "inquirer": "^9.1.4"
   },
   "devDependencies": {
     "@types/isomorphic-fetch": "^0.0.36",

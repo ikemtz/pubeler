@@ -27,7 +27,7 @@ export class Pubeler {
   public async pubelRecords() {
     const primaryKeyName = Object.keys(this.dataSet[0])[0];
     for (let i = 0; i < this.dataSet.length; i++) {
-      await this.pubelRecord(this.dataSet[i], primaryKeyName, i);
+      await this.pubelRecord(this.dataSet[i], primaryKeyName, i + 1);
     }
     console.log(`Successful posts ${chalk.green(this.successRecords.toString())}`);
     console.log(`Failed posts ${chalk.red(this.failedRecords.length)}`);
