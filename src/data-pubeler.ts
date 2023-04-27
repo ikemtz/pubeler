@@ -19,8 +19,10 @@ export class Pubeler {
       httpAgent: new httpAgent({}),
       httpsAgent: new httpsAgent({ rejectUnauthorized: !(this.config.skip_ssl_validation || false) }),
     };
+    this.dataSetLength = this.dataSet.length;
   }
   private readonly requestConfig: AxiosRequestConfig;
+  private readonly dataSetLength: number;
   private successRecords = 0;
   private failedRecords: string[] = [];
 
@@ -45,11 +47,11 @@ export class Pubeler {
     try {
       const response = await axios.post(this.url, record, this.requestConfig);
 
-      console.log(`Success Posting Row# ${rowNum}: ${primaryKeyValue}`);
+      console.log(`Success Posting Row# ${rowNum} of ${this.dataSetLength}: ${primaryKeyValue}`);
       this.successRecords++;
       return response.data;
     } catch (err: any) {
-      console.error(chalk.red(`Error Posting Row# ${rowNum}: ${primaryKeyValue}`));
+      console.error(chalk.red(`Error Posting Row# ${rowNum} of ${this.dataSetLength}: ${primaryKeyValue}`));
       let msg: string = err.message;
       if (err.response && err.response.data) {
         msg = JSON.stringify(err.response.data);
