@@ -1,6 +1,6 @@
 {
   "name": "pubeler",
-  "version": "1.0.21",
+  "version": "1.0.22",
   "description": "A console application that can call Rest APIs with data from flat files.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
