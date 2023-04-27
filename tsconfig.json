@@ -3,22 +3,14 @@
     "declaration": true,
     "declarationDir": "./dist",
     "moduleResolution": "node",
-    "target": "es2017",
-    "lib": [
-      "es2017",
-      "es2015",
-      "dom",
-      "es6"
-    ],
+    "target": "ES6",
+    "lib": ["dom", "es6"],
     "module": "commonjs",
     "outDir": "./dist",
     "sourceMap": false,
-    "strict": true
+    "strict": true,
+    "esModuleInterop": true
   },
-  "include": [
-    "src/**.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["src/**.ts"],
+  "exclude": ["node_modules"]
 }
