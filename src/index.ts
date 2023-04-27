@@ -39,7 +39,7 @@ const records = parserLogic.getDataAsync();
 new TokenLogic(config).getToken().then(async (token) => {
   if (commandLineArgs.oauthDebug) {
     console.warn('OAuth Debug was specified.');
-    console.warn(`Here is your token: ${token}`);
+    console.warn(`Here is your token: ${JSON.stringify(token)}`);
   }
   console.log('Starting the posting process');
   const pubeler = new Pubeler(await records, token, config.postDestinationUrl, config);

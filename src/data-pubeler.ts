@@ -1,6 +1,7 @@
 import { TokenResponse } from './token-response';
-import axios from 'axios';
-import { Agent } from 'https';
+import axios, { AxiosRequestConfig } from 'axios';
+import { Agent as httpAgent } from 'http';
+import { Agent as httpsAgent } from 'https';
 import { Config } from './config';
 import { format } from 'date-fns';
 import * as fs from 'fs';
@@ -12,15 +13,21 @@ export class Pubeler {
     private readonly tokenResponse: TokenResponse,
     private readonly url: string,
     private readonly config: Config,
-  ) {}
-
+  ) {
+    this.requestConfig = {
+      headers: { Authorization: `Bearer ${this.tokenResponse.access_token}` },
+      httpAgent: new httpAgent({}),
+      httpsAgent: new httpsAgent({ rejectUnauthorized: !(this.config.skip_ssl_validation || false) }),
+    };
+  }
+  private readonly requestConfig: AxiosRequestConfig;
   private successRecords = 0;
   private failedRecords: string[] = [];
 
   public async pubelRecords() {
     const primaryKeyName = Object.keys(this.dataSet[0])[0];
-    for (const element of this.dataSet) {
-      await this.pubelRecord(element, primaryKeyName);
+    for (let i = 0; i < this.dataSet.length; i++) {
+      await this.pubelRecord(this.dataSet[i], primaryKeyName, i);
     }
     console.log(`Successful posts ${chalk.green(this.successRecords.toString())}`);
     console.log(`Failed posts ${chalk.red(this.failedRecords.length)}`);
@@ -33,18 +40,16 @@ export class Pubeler {
     console.log('Pubeler out 🎤 💧 ✌');
   }
 
-  private async pubelRecord(record: any, primaryKeyName: string): Promise<object> {
+  private async pubelRecord(record: any, primaryKeyName: string, index: number): Promise<unknown> {
     const primaryKeyValue = record[primaryKeyName];
     try {
-      const response = await axios.post(this.url, record, {
-        headers: { Authorization: `Bearer ${this.tokenResponse.access_token}` },
-        httpsAgent: new Agent({ rejectUnauthorized: !(this.config.skip_ssl_validation || false) }),
-      });
-      console.log(`Success Posting: ${primaryKeyValue}`);
+      const response = await axios.post(this.url, record, this.requestConfig);
+
+      console.log(`Success Posting Row# ${index}: ${primaryKeyValue}`);
       this.successRecords++;
       return response.data;
     } catch (err: any) {
-      console.error(chalk.red(`Error Posting: ${primaryKeyValue}`));
+      console.error(chalk.red(`Error Posting Row# ${index}: ${primaryKeyValue}`));
       let msg: string = err.message;
       if (err.response && err.response.data) {
         msg = JSON.stringify(err.response.data);
